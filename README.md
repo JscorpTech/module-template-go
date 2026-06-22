@@ -142,10 +142,62 @@ curl http://localhost:8100/health
 
 ---
 
+## Qisqa ma'lumotnoma (cheat sheet)
+
+To'liq tafsilot — [`SDK.md`](./SDK.md). Tez-tez kerak bo'ladiganlar shu yerda:
+
+### Field `type` (SDK orqali to'liq ishlaydigani)
+
+| `type` | UI | Qo'shimcha xossa | `data[key]` qiymati |
+|---|---|---|---|
+| `text` | input | `placeholder`, `helpText` | string |
+| `number` | raqamli input | `placeholder` | number |
+| `textarea` | ko'p qatorli | `placeholder` | string |
+| `select` | dropdown | **`options[]`** | `option.value` |
+| `checkbox` | katakcha | — | bool |
+| `switch` | toggle | `helpText` | bool |
+| `credential` | credential tanlovchi | **`credentialType`** | engine `credentials[key]` ga uzatadi |
+
+Boshqa type'lar (array-editor, nested-rows, code-editor, ...) qo'shimcha props talab
+qiladi — SDK `Field` ularni hozir bermaydi. Shu 7 tasi bilan ishlang.
+
+### Ikon (`Icon`) — eng kerakli nomlar
+
+`zap` `globe` `http` `database` `key` `brain-circuit` `table` `folder` `arrow-right`
+`settings-2` `message` `clock` `credit-card` `code`. Noma'lum nom → `sparkles`.
+To'liq ro'yxat SDK.md §8.
+
+### Rang (`Color`) — token kalitlari
+
+Action: `integration-sky` `integration-green` `action-violet` `action-emerald`.
+Trigger: `trigger-blue`. AI: `ai-violet`. **Noma'lum token → kulrang** (`"blue"` ishlamaydi!).
+To'liq ro'yxat SDK.md §9.
+
+### `visibleWhen` (shartli ko'rsatish)
+
+```go
+{Type: "switch", Key: "save", Optional: true},
+{Type: "text", Key: "state_key", Optional: true,
+ VisibleWhen: &botmodule.VisibleWhen{Key: "save", Equals: true}},
+```
+
+### Handler kontekstidan o'qish
+
+```go
+c.String("key")          // data[key] → string
+c.Int("key")             // data[key] → int64
+c.Credential("key")      // (*Credential, bool)
+c.Data["flag"].(bool)    // switch/checkbox
+c.MessageText()          // trigger: update.message.text
+c.CallbackData()         // trigger: callback_query.data
+```
+
+---
+
 ## SDK to'liq hujjati
 
-Bu repodagi **[`SDK.md`](./SDK.md)** — `botmodule-go` ning to'liq API hujjati
-(Node maydonlari, ExecuteCtx/TriggerCtx/Credential helper'lari, field type'lar,
-`describe` avtomatik generatsiyasi, misollar). Yangi modul yozish uchun shuni o'qing.
+Bu repodagi **[`SDK.md`](./SDK.md)** — `botmodule-go` ning to'liq ma'lumotnomasi
+(har bir tur, field type, ikon va rang token'lari, JSON-RPC kontrakti, `module.yaml`,
+test). Packagega borish shart emas — hammasi shu repoda.
 
 Manba: `github.com/BotSpace/botmodule-go`.
