@@ -133,7 +133,7 @@ go mod tidy
 `go.mod` ichidagi `replace` qatorini olib tashlang:
 ```
 // Bu qatorni o'chiring:
-replace github.com/BotSpace/botmodule-go => ../botmodule-go
+replace github.com/JscorpTech/botmodule-go => ../botmodule-go
 ```
 Keyin:
 ```bash
@@ -142,19 +142,28 @@ go mod tidy
 
 ---
 
-## Admin panel orqali ro'yxatga olish
+## Platformaga qo'shish (2 yo'l)
 
-1. Image'ni registryga push qiling.
-2. Admin panel → Modullar → Modul qo'shish:
-   - `slug` = `module.id` (module.yaml)
-   - `image` = registry yo'li (masalan `registry.iprogrammer.uz/botspace/mymodule:latest`)
-   - `port` = 8100
-   - `active` = true
-3. Kerak bo'lsa `auth_token` kiriting — module pod `MODULE_AUTH_TOKEN` env sifatida oladi.
+**Auto-deploy (tavsiya) — faqat push:**
+1. `module.yaml` ichida `source.github` ni o'z repongizga moslang.
+2. Botmother GitHub App repongizga o'rnatilgan bo'lsin.
+3. `git push` → platforma **avtomatik** klonlaydi, image quradi (Kaniko),
+   registryga push qiladi, modul pod'ini ishga tushiradi. CI/secret/token kerak emas.
+
+**Admin orqali (qo'lda):**
+- Admin panel → Modullar → **Modul qo'shish** → `module.yaml` ni paste qiling
+  (yoki raw URL bering). Platforma uni o'qib ro'yxatga oladi va build qiladi.
+
+> **Self-hosted:** modulni o'z serveringizda yuritmoqchi bo'lsangiz, `module.yaml`
+> da `source.github` o'rniga `source.endpoint: https://my-server.com/rpc` yozing —
+> platforma build qilmaydi, engine to'g'ridan shu manzilga ulanadi.
 
 ---
 
-## SDK hujjati
+## SDK to'liq hujjati
 
-To'liq API: [botmodule-go README](../botmodule-go/README.md) yoki
-`github.com/BotSpace/botmodule-go`.
+Bu repodagi **[`SDK.md`](./SDK.md)** — `botmodule-go` ning to'liq API hujjati
+(Node maydonlari, ExecuteCtx/TriggerCtx/Credential helper'lari, field type'lar,
+`describe` avtomatik generatsiyasi, misollar). Yangi modul yozish uchun shuni o'qing.
+
+Manba: `github.com/JscorpTech/botmodule-go`.
