@@ -16,7 +16,7 @@ import (
 	"fmt"
 	"strings"
 
-	botmodule "github.com/JscorpTech/botmodule-go"
+	botmodule "github.com/BotSpace/botmodule-go"
 )
 
 const moduleID = "mymodule"

@@ -7,15 +7,11 @@ FROM golang:1.22-alpine AS builder
 
 WORKDIR /build
 
-# Dependency cache qatlami (go.mod/go.sum avval ko'chiriladi).
-COPY go.mod go.sum* ./
-RUN go mod download
-
-# Manba kod.
+# Manba kod + vendor/ (SDK shu yerda — build paytida network kerak emas).
 COPY . .
 
-# CGO o'chirilgan statik binary → scratch yoki alpine'da ishlaydi.
-RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /module .
+# vendor/ mavjud → -mod=vendor offline build. CGO o'chiq → statik binary.
+RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -trimpath -ldflags="-s -w" -o /module .
 
 # ---- Runtime ----
 FROM alpine:3.20

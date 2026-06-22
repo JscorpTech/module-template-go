@@ -12,7 +12,7 @@ module:
 #   source.github   → platforma kodni klonlab image quradi
 #   source.endpoint → modul allaqachon shu manzilda ishlaydi (self-hosted), build yo'q
 source:
-  github: https://github.com/yourorg/module-template-go
+  github: https://github.com/BotSpace/module-template-go
   # endpoint: https://my-server.com
 
 runtime:

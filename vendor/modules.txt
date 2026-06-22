@@ -1,0 +1,4 @@
+# github.com/BotSpace/botmodule-go v0.1.0 => ../botmodule-go
+## explicit; go 1.22
+github.com/BotSpace/botmodule-go
+# github.com/BotSpace/botmodule-go => ../botmodule-go

@@ -114,49 +114,31 @@ Execute: func(c *botmodule.ExecuteCtx) botmodule.Result {
 
 ---
 
-## Docker build
+## SDK `vendor/` ichida — push qilishdan oldin yangilang
 
-```bash
-docker build -t registry.iprogrammer.uz/botspace/mymodule:latest .
-docker push registry.iprogrammer.uz/botspace/mymodule:latest
-```
+SDK kodi repo ichidagi `vendor/` papkada keladi. Shu sabab platforma (yoki
+Kaniko) reponi klonlab, **network'siz** to'g'ridan-to'g'ri build qiladi —
+`go get` yoki tashqi proxy kerak emas.
 
-`go.sum` yo'q bo'lsa avval generate qiling:
+Node'larni o'zgartirgach `vendor/` ni yangilang va push qiling:
+
 ```bash
 go mod tidy
+go mod vendor      # SDK'ni vendor/ ga ko'chiradi
+git add -A && git commit -m "update" && git push
 ```
 
----
+> `go.mod` dagi `replace ... => ../botmodule-go` faqat SDK'ni parallel ishlab
+> chiqayotganlar uchun. `vendor/` mavjud bo'lgani uchun build uni o'qimaydi —
+> o'chirishingiz shart emas.
 
-## Prodga o'tish (lokal replace olib tashlash)
+## Lokal test (Docker)
 
-`go.mod` ichidagi `replace` qatorini olib tashlang:
-```
-// Bu qatorni o'chiring:
-replace github.com/JscorpTech/botmodule-go => ../botmodule-go
-```
-Keyin:
 ```bash
-go mod tidy
+docker build -t mymodule .
+docker run -p 8100:8100 mymodule
+curl http://localhost:8100/health
 ```
-
----
-
-## Platformaga qo'shish (2 yo'l)
-
-**Auto-deploy (tavsiya) — faqat push:**
-1. `module.yaml` ichida `source.github` ni o'z repongizga moslang.
-2. Botmother GitHub App repongizga o'rnatilgan bo'lsin.
-3. `git push` → platforma **avtomatik** klonlaydi, image quradi (Kaniko),
-   registryga push qiladi, modul pod'ini ishga tushiradi. CI/secret/token kerak emas.
-
-**Admin orqali (qo'lda):**
-- Admin panel → Modullar → **Modul qo'shish** → `module.yaml` ni paste qiling
-  (yoki raw URL bering). Platforma uni o'qib ro'yxatga oladi va build qiladi.
-
-> **Self-hosted:** modulni o'z serveringizda yuritmoqchi bo'lsangiz, `module.yaml`
-> da `source.github` o'rniga `source.endpoint: https://my-server.com/rpc` yozing —
-> platforma build qilmaydi, engine to'g'ridan shu manzilga ulanadi.
 
 ---
 
@@ -166,4 +148,4 @@ Bu repodagi **[`SDK.md`](./SDK.md)** — `botmodule-go` ning to'liq API hujjati
 (Node maydonlari, ExecuteCtx/TriggerCtx/Credential helper'lari, field type'lar,
 `describe` avtomatik generatsiyasi, misollar). Yangi modul yozish uchun shuni o'qing.
 
-Manba: `github.com/JscorpTech/botmodule-go`.
+Manba: `github.com/BotSpace/botmodule-go`.
