@@ -266,6 +266,49 @@ func main() {
 		return nil
 	})
 
+	// ------------------------------------------------------------------
+	// 6. Action node — PickCity (CREDENTIAL'SIZ kaskadli dynamic_select)
+	//    Davlat → shahar. Credential YO'Q (field'larda credentialKey berilmagan)
+	//    — optionlar modul tomonidan auth'siz hisoblanadi.
+	// ------------------------------------------------------------------
+	m.AddNode(botmodule.Node{
+		Type:        "mymodule.PickCity",
+		Title:       "Shahar tanlash",
+		Description: "Credential'siz kaskadli tanlov (davlat → shahar)",
+		Category:    "integrations",
+		Icon:        "globe",
+		Color:       "integration-sky",
+		Content: []botmodule.Field{
+			// credentialKey YO'Q → credential talab qilinmaydi
+			{Type: "dynamic_select", Key: "country", Label: "Davlat", Resource: "countries"},
+			{Type: "dynamic_select", Key: "city", Label: "Shahar", Resource: "cities", DependsOn: []string{"country"}},
+		},
+		ProducesState: []string{"picked_country", "picked_city"},
+		Execute: func(c *botmodule.ExecuteCtx) botmodule.Result {
+			return botmodule.Result{ContextUpdates: map[string]any{
+				"picked_country": c.String("country"),
+				"picked_city":    c.String("city"),
+			}}
+		},
+	})
+
+	// Credential'siz options loaderlari — auth kerak emas, faqat dependsOn.
+	m.AddOptionsLoader("countries", func(c *botmodule.OptionsCtx) []botmodule.SelectOption {
+		return []botmodule.SelectOption{
+			{Value: "uz", Label: "O'zbekiston"},
+			{Value: "kz", Label: "Qozog'iston"},
+		}
+	})
+	m.AddOptionsLoader("cities", func(c *botmodule.OptionsCtx) []botmodule.SelectOption {
+		switch c.String("country") {
+		case "uz":
+			return []botmodule.SelectOption{{Value: "tashkent", Label: "Toshkent"}, {Value: "samarkand", Label: "Samarqand"}}
+		case "kz":
+			return []botmodule.SelectOption{{Value: "almaty", Label: "Almati"}, {Value: "astana", Label: "Ostona"}}
+		}
+		return nil
+	})
+
 	m.Serve(":8100")
 }
 
