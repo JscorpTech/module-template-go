@@ -203,7 +203,7 @@ muddati o'tgach platforma tomonidan avtomatik tozalanadi. Batafsil: SDK.md §20.
 
 ### Boshqa yangi imkoniyatlar (SDK.md §20)
 
-- **`Result{Error: msg}`** — xatoni debug UI'da ko'rsatadi (§20.1)
+- **`Result{Alerts: []Alert{...}}`** — info/warning/error xabarni debug UI'da ko'rsatadi (§20.1)
 - **`Node.Outputs`** — nomli dinamik chiqishlar; `Result{ExitOutput:"found"}` (§20.2)
 - **`m.AddCredentialType(...)`** — modul o'z credential turini beradi (§20.3)
 - **`dynamic_select` + `m.AddOptionsLoader(...)`** — kaskadli tanlov, doc→sheet (§20.4)

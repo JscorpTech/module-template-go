@@ -2,7 +2,7 @@
 //
 // Node turlari (SDK imkoniyatlari namunasi):
 //   - mymodule.Echo       — action: matnni echo qiladi
-//   - mymodule.AuthHeader — action: credential'dan HTTP header (Result.Error namuna)
+//   - mymodule.AuthHeader — action: credential'dan HTTP header (Result.Alerts namuna)
 //   - mymodule.OnKeyword  — trigger: kalit so'z (Global toggle)
 //   - mymodule.Route      — action: NOMLI dinamik chiqishlar (found/missing)
 //   - mymodule.PickSheet  — action: KASKADLI dynamic_select (credential→hujjat→varaq)
@@ -141,11 +141,13 @@ func main() {
 		Execute: func(c *botmodule.ExecuteCtx) botmodule.Result {
 			cred, ok := c.Credential("api_credential")
 			if !ok {
-				// Result.Error → platforma buni debug error ro'yxati + alert'da
-				// ko'rsatadi va node'ni qizil qiladi (flow to'xtaydi).
 				return botmodule.Result{
 					ContextUpdates: map[string]any{"auth_header": "", "cred_type": ""},
-					Error:          "credential tanlanmagan",
+					ExitOutput:     "error",
+					Alerts: []botmodule.Alert{{
+						Level:   botmodule.AlertError,
+						Message: "credential tanlanmagan",
+					}},
 				}
 			}
 
